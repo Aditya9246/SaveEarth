@@ -1,0 +1,25 @@
+I need to create a Node.js server file named server.js.
+
+This server must use Express and the @xenova/transformers library.
+
+It should:
+
+Initialize an Express app.
+
+Use the express.json() middleware to parse JSON bodies.
+
+Define a singleton class named ValidatorPipeline to load the model. This is critical for performance, as the model should only be loaded once when the server starts, not on every API request.
+
+The ValidatorPipeline class should load the 'Xenova/owlvit-base-patch32' model for the 'zero-shot-object-detection' task.
+
+Create a POST endpoint at /validate-image.
+
+This endpoint must read a JSON body containing image_url (a string) and queries (an array of strings).
+
+Inside the endpoint, it should get the validator instance and run the detection on the image_url using the provided queries.
+
+Finally, the endpoint should return the JSON array of findings (the objects detected by the model).
+
+The server should listen on port 3000 and log a message.
+
+Please provide the complete, commented server.js file.
