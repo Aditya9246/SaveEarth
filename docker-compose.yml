@@ -2,15 +2,21 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
-      - "8080:80"
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
     depends_on:
       - backend
 
   backend:
     build:
       context: ./src/server
-      dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3001:3000"
+    environment:
+      TRANSFORMERS_CACHE: /usr/src/app/models
+      TRANSFORMERS_ALLOW_REMOTE: "true"
+      TRANSFORMERS_LOCAL_FILES_ONLY: "false"
