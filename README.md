@@ -27,7 +27,6 @@ SeaScore (also called SaveEarth) motivates users to reduce plastic waste and pro
 - Docker (optional but recommended)
 
 ### 1. Clone the Repository
-```bash
 git clone https://github.com/your-username/SaveEarth.git
 cd SaveEarth
 
