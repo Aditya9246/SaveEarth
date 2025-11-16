@@ -2,74 +2,113 @@
 
 // Import necessary libraries
 import express from 'express';
+import cors from 'cors';
+import multer from 'multer';
 import { pipeline } from '@xenova/transformers';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 // Get the directory name of the current module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Define a singleton class to manage the object detection model.
-// This ensures the model is loaded only once, improving performance.
+// ===== MODEL SINGLETON (unchanged) =====
 class ValidatorPipeline {
-    static task = 'zero-shot-object-detection';
-    static model = 'Xenova/owlv2-base-patch16';
-    static instance = null;
+  static task = 'zero-shot-object-detection';
+  static model = 'Xenova/owlv2-base-patch16';
+  static instance = null;
 
-    // Static method to get the pipeline instance.
-    // If the instance doesn't exist, it's created.
-    static async getInstance(progress_callback = null) {
-        if (this.instance === null) {
-            this.instance = pipeline(this.task, this.model, {
-                cache_dir: path.join(__dirname, 'models'), // Use the local models directory
-                local_files_only: true, // Force loading from local files only
-                progress_callback
-            });
-        }
-        return this.instance;
+  static async getInstance(progress_callback = null) {
+    if (this.instance === null) {
+      this.instance = pipeline(this.task, this.model, {
+        cache_dir: path.join(__dirname, 'models'),
+        local_files_only: true,
+        progress_callback,
+      });
     }
+    return this.instance;
+  }
 }
 
-// Initialize the Express app
+// ===== EXPRESS APP SETUP =====
 const app = express();
 
-// Use the express.json middleware to parse JSON request bodies
+// CORS so frontend (8080) can talk to backend (3000)
+app.use(
+  cors({
+    origin: 'http://localhost:8080',
+  })
+);
+
+// Only needed for JSON endpoints, not multipart
 app.use(express.json());
 
-// Define the POST endpoint for image validation
-app.post('/validate-image', async (req, res) => {
-    // Extract image_url and queries from the request body
-    const { image_url, queries } = req.body;
-
-    // Basic validation for the request body
-    if (!image_url || !queries || !Array.isArray(queries)) {
-        return res.status(400).json({ error: 'Missing image_url or queries' });
-    }
-
-    try {
-        // Get the validator pipeline instance
-        const validator = await ValidatorPipeline.getInstance();
-
-        // Run the object detection on the provided image and queries
-        const output = await validator(image_url, queries);
-
-        // Return the detection results as a JSON array
-        res.json(output);
-    } catch (error) {
-        // Handle any errors that occur during the process
-        console.error('Error during image validation:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
+// ===== MULTER SETUP (file upload) 🔥 =====
+const upload = multer({
+  dest: path.join(__dirname, 'uploads'), // folder inside container
 });
 
-// Define the port the server will listen on
+// ===== NEW ENDPOINT: multipart/form-data 🔥 =====
+app.post(
+  '/validate-image',
+  upload.single('image'), // "image" is the field name from the frontend
+  async (req, res) => {
+    try {
+      // File from multer
+      const file = req.file;
+      // Queries from text field
+      const { queries } = req.body;
+
+      if (!file) {
+        return res.status(400).json({ error: 'Missing image file' });
+      }
+
+      if (!queries) {
+        return res.status(400).json({ error: 'Missing queries' });
+      }
+
+      // queries might come as JSON string, e.g. '["a","b"]'
+      let parsedQueries;
+      try {
+        parsedQueries = JSON.parse(queries);
+      } catch (e) {
+        // fallback: comma-separated list
+        parsedQueries = queries.split(',').map((q) => q.trim());
+      }
+
+      if (!Array.isArray(parsedQueries) || parsedQueries.length === 0) {
+        return res.status(400).json({ error: 'Invalid queries format' });
+      }
+
+      const imagePath = file.path; // local path to uploaded image
+
+      // Get the validator pipeline instance
+      const validator = await ValidatorPipeline.getInstance();
+
+      // Run detection. Xenova's pipeline can load from a local path string.
+      const output = await validator(imagePath, parsedQueries);
+
+      // Optional: delete the temp file after processing to save space
+      fs.unlink(imagePath, (err) => {
+        if (err) console.error('Error deleting temp file:', err);
+      });
+      const cleaned = output.map(({ image, ...rest }) => rest);
+      // You can return raw output or wrap it nicely
+      res.json({
+        detections: cleaned,
+      });
+    } catch (error) {
+      console.error('Error during image validation:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+);
+
+// ===== SERVER START =====
 const PORT = 3000;
 
-// Start the server
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-    // It's good practice to pre-load the model when the server starts
-    // to avoid a cold start on the first request.
-    ValidatorPipeline.getInstance(console.log);
+  console.log(`Server is running on http://localhost:${PORT}`);
+  ValidatorPipeline.getInstance(console.log);
 });
