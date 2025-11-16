@@ -1,11 +1,13 @@
 import { motion } from "motion/react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { Wine, Zap, Trophy, CheckCircle } from "lucide-react";
+import { Wine, Zap, Trophy, CheckCircle, Gift, ChevronRight } from "lucide-react";
 
 interface ChallengesScreenProps {
   onSelectChallenge: (challenge: any) => void;
   completedStamps: string[];
+  onOpenRewards: () => void;
+  totalPoints: number;
 }
 
 const challenges = [
@@ -104,7 +106,7 @@ const difficultyConfig = {
   },
 };
 
-export function ChallengesScreen({ onSelectChallenge, completedStamps }: ChallengesScreenProps) {
+export function ChallengesScreen({ onSelectChallenge, completedStamps, onOpenRewards, totalPoints }: ChallengesScreenProps) {
   const bronzeChallenges = challenges.filter((c) => c.difficulty === "bronze");
   const silverChallenges = challenges.filter((c) => c.difficulty === "silver");
   const goldChallenges = challenges.filter((c) => c.difficulty === "gold");
@@ -183,16 +185,26 @@ export function ChallengesScreen({ onSelectChallenge, completedStamps }: Challen
 
   return (
     <div className="h-full overflow-y-auto">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-green-500 to-blue-500 p-6 rounded-b-3xl mb-6"
-      >
-        <h2 className="text-white mb-2">Challenges</h2>
-        <p className="text-white/90 text-sm">
-          Complete challenges to earn stamps and level up
-        </p>
-      </motion.div>
+      {/* Rewards Section */}
+      <div className="p-6 pb-4">
+        <motion.button
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          onClick={onOpenRewards}
+          className="w-full bg-gradient-to-br from-purple-500 to-pink-500 p-4 rounded-2xl flex items-center justify-between hover:shadow-lg transition-shadow border-2 border-purple-400"
+        >
+          <div className="flex items-center gap-3">
+            <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 border-2 border-white/40">
+              <Gift className="w-6 h-6 text-white" />
+            </div>
+            <div className="text-left">
+              <div className="text-white/90 text-sm">Your Points</div>
+              <div className="text-white text-2xl">{totalPoints}</div>
+            </div>
+          </div>
+          <ChevronRight className="w-5 h-5 text-white" />
+        </motion.button>
+      </div>
 
       <div className="px-6 pb-6">
         {renderChallengeSection("Bronze Challenges", bronzeChallenges, "bronze")}
