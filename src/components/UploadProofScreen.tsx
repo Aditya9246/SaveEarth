@@ -14,6 +14,8 @@ interface UploadProofScreenProps {
   onBack: () => void;
 }
 
+const MIN_CONFIDENCE = 0.6;
+
 export function UploadProofScreen({
   challenge,
   onSubmit,
@@ -37,8 +39,7 @@ export function UploadProofScreen({
   const handleCaptureAndSet = () => {
     const photoDataUrl = capturePhoto();
     if (photoDataUrl) {
-      // data URL (or blob URL) from camera
-      setUploadedImage(photoDataUrl);
+      setUploadedImage(photoDataUrl); // data URL (or blob URL)
       stopCamera();
     }
   };
@@ -50,7 +51,7 @@ export function UploadProofScreen({
   const handleValidationSubmit = async () => {
     if (!uploadedImage) return;
 
-    // we really expect a challenge here; if not, bail safely
+    // We really expect a challenge; if not, do nothing safely
     if (!challenge) {
       console.error("No challenge provided to UploadProofScreen");
       return;
@@ -58,7 +59,7 @@ export function UploadProofScreen({
 
     setIsLoading(true);
 
-    // 🔑 Use queries from the challenge, fall back to title if needed
+    // Use queries from the challenge, fallback to title if needed
     const queries =
       Array.isArray(challenge.queries) && challenge.queries.length > 0
         ? challenge.queries
@@ -69,8 +70,7 @@ export function UploadProofScreen({
       const blob = await fetch(uploadedImage).then((res) => res.blob());
 
       const formData = new FormData();
-      // field name 'image' must match upload.single('image') on backend
-      formData.append("image", blob, "photo.png");
+      formData.append("image", blob, "photo.png"); // must match backend field name
       formData.append("queries", JSON.stringify(queries));
       formData.append("challengeId", challenge.id);
       formData.append("challengeTitle", challenge.title);
@@ -90,7 +90,7 @@ export function UploadProofScreen({
       const result = await response.json();
       console.log("Validation Result (raw):", result);
 
-      // Support both:
+      // Support:
       //  - raw array from Xenova: [{ score, box, label, ... }]
       //  - wrapped: { detections: [...] }
       const detections = Array.isArray(result)
@@ -99,22 +99,27 @@ export function UploadProofScreen({
         ? result.detections
         : [];
 
-      const isValid = detections.length > 0;
+      const hasDetection = detections.length > 0;
 
       const topScore =
-        isValid && typeof detections[0].score === "number"
+        hasDetection && typeof detections[0].score === "number"
           ? detections[0].score
-          : undefined;
+          : 0;
+
+      // ✅ enforce 60% confidence threshold for "success"
+      const passesThreshold = hasDetection && topScore >= MIN_CONFIDENCE;
 
       setValidationResult({
-        isValid,
+        isValid: passesThreshold,
         confidence: topScore,
-        message: isValid
+        message: passesThreshold
           ? "Your photo clearly shows your sustainable action!"
-          : "We couldn't verify the challenge requirements in this photo.",
-        details: isValid
+          : "We couldn't confidently verify the challenge requirements in this photo.",
+        details: passesThreshold
           ? "Great job! Your photo meets all the challenge criteria."
-          : "Make sure your photo clearly shows the reusable items or sustainable action.",
+          : topScore > 0
+          ? "We detected something related, but the confidence was too low. Try taking a clearer photo where the item or action is front and center."
+          : "We couldn’t find the required items or action in your photo. Make sure your photo clearly shows the reusable items or sustainable action.",
         challengeName: challenge.title,
         raw: result,
       });
@@ -280,7 +285,7 @@ export function UploadProofScreen({
         >
           <Button
             onClick={handleValidationSubmit}
-            disabled={!uploadedImage || isLoading}
+            disabled={!uploadedImage || isLoading || !challenge}
             className="w-full bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 rounded-full py-6 disabled:opacity-50"
           >
             {isLoading ? (
@@ -290,7 +295,7 @@ export function UploadProofScreen({
             )}
           </Button>
           <p className="text-center text-sm text-gray-500 mt-2">
-            +{challenge?.points} points on verification
+            {challenge ? `+${challenge.points} points on verification` : ""}
           </p>
         </motion.div>
       </div>
