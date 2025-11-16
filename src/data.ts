@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface Challenge {
   id: string;
   title: string;
@@ -5,6 +7,7 @@ export interface Challenge {
   category: "Food" | "Home" | "Community";
   points: number;
   queries: string[]; // OWL-ViT search terms for validation
+  icon?: ReactNode
 }
 
 

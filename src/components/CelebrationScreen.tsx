@@ -69,8 +69,10 @@ export function CelebrationScreen({
           }}
           className="mb-6"
         >
-          <div className="relative mx-auto w-40 h-40 bg-white rounded-3xl shadow-2xl flex items-center justify-center">
-            <div className="text-7xl">{challenge?.title}</div>
+          <div className="relative mx-auto w-40 h-40 bg-white rounded-3xl shadow-2xl flex items-center justify-center overflow-hidden p-2">
+            {/* Use icon/emoji instead of text */}
+            <div className="text-7xl leading-none">{challenge?.icon ?? "🏆"}</div>
+
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
@@ -87,9 +89,12 @@ export function CelebrationScreen({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
+          className="px-4"
         >
-          <h1 className="text-white mb-2">STAMP ADDED!</h1>
-          <p className="text-white/90 mb-6">{challenge?.title}</p>
+          <h1 className="text-white mb-2 text-xl font-semibold">STAMP ADDED!</h1>
+          <p className="text-white/90 mb-6 text-sm break-words">
+            {challenge?.title}
+          </p>
         </motion.div>
 
         {/* Points Badge */}
@@ -119,7 +124,7 @@ export function CelebrationScreen({
         </motion.div>
       </motion.div>
 
-      {/* Sparkles around the screen */}
+      {/* Sparkles */}
       {[...Array(8)].map((_, i) => (
         <motion.div
           key={`sparkle-${i}`}

@@ -10,7 +10,7 @@ import { ValidationResult } from "../types";
 
 interface UploadProofScreenProps {
   challenge: Challenge | null;
-  onSubmit: (imageUrl: string) => void; // 👈 changed
+  onSubmit: (imageUrl: string) => void; // 👈 send proof image up to App
   onBack: () => void;
 }
 
@@ -146,8 +146,15 @@ export function UploadProofScreen({
 
   const handleValidationAccept = () => {
     if (uploadedImage) {
-      onSubmit(uploadedImage); // 👈 send the proof image up to App
+      onSubmit(uploadedImage); // normal accepted flow
     }
+  };
+
+  // 🔥 NEW: Demo bypass button handler
+  const handleDemoBypass = () => {
+    if (!uploadedImage || !challenge) return;
+    // Skip ML completely and just mark as completed
+    onSubmit(uploadedImage);
   };
 
   // --- RENDER ---
@@ -263,12 +270,12 @@ export function UploadProofScreen({
           )}
         </motion.div>
 
-        {/* Submit Button */}
+        {/* Submit + Demo Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="mt-6"
+          className="mt-6 space-y-3"
         >
           <Button
             onClick={handleValidationSubmit}
@@ -281,7 +288,19 @@ export function UploadProofScreen({
               "Submit Proof"
             )}
           </Button>
-          <p className="text-center text-sm text-gray-500 mt-2">
+
+          {/* NEW demo bypass button */}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleDemoBypass}
+            disabled={!uploadedImage || !challenge}
+            className="w-full rounded-full py-4 border-2 border-dashed border-gray-300 text-xs text-gray-600"
+          >
+            Demo: Skip AI Check & Mark as Complete
+          </Button>
+
+          <p className="text-center text-sm text-gray-500 mt-1">
             {challenge ? `+${challenge.points} points on verification` : ""}
           </p>
         </motion.div>
