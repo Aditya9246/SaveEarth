@@ -1,10 +1,10 @@
 # Application Summary
 
-This document provides a summary of the SaveEarth application, including its functionality, machine learning model, and Firebase integration.
+This document provides a summary of the SeaScore application, including its functionality, machine learning model, and Firebase integration.
 
 ## Application Functionality
 
-The SaveEarth application is a mobile app designed to encourage and reward users for taking positive environmental actions. The app has the following main features:
+The SeaScore application is a mobile app designed to encourage and reward users for taking positive environmental actions. The app has the following main features:
 
 - **User Authentication:** Users can create an account and log in using their email and password.
 - **Challenges:** Users can view a list of challenges, each with a description, category, and point value.
