@@ -52,21 +52,23 @@ const feedPosts = [
 
 export function CommunityFeedScreen() {
   return (
-    <div className="h-full overflow-y-auto bg-gray-50">
+    <div className="h-full overflow-y-auto">
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-green-500 to-blue-500 p-6 rounded-b-3xl mb-4 sticky top-0 z-10"
-      >
-        <h2 className="text-white mb-1">Community Feed</h2>
-        <p className="text-white/90 text-sm">
-          See what others are achieving
-        </p>
-      </motion.div>
+      <div className="p-6 pb-4">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gradient-to-br from-green-500 to-blue-500 p-4 rounded-2xl border-2 border-green-400"
+        >
+          <h2 className="text-white mb-1">Community Feed</h2>
+          <p className="text-white/90 text-sm">
+            See what others are achieving
+          </p>
+        </motion.div>
+      </div>
 
       {/* Feed Posts */}
-      <div className="px-4 pb-6 space-y-4">
+      <div className="px-6 pb-6 space-y-4">
         {feedPosts.map((post, index) => (
           <motion.div
             key={post.id}

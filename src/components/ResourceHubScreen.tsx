@@ -76,18 +76,20 @@ const typeIcons = {
 
 export function ResourceHubScreen() {
   return (
-    <div className="h-full overflow-y-auto bg-gray-50">
+    <div className="h-full overflow-y-auto">
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-purple-500 to-pink-500 p-6 rounded-b-3xl mb-6 sticky top-0 z-10"
-      >
-        <h2 className="text-white mb-1">Resource Hub</h2>
-        <p className="text-white/90 text-sm">
-          Guides and tips for your sustainability journey
-        </p>
-      </motion.div>
+      <div className="p-6 pb-4">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gradient-to-br from-purple-500 to-pink-500 p-4 rounded-2xl border-2 border-purple-400"
+        >
+          <h2 className="text-white mb-1">Resource Hub</h2>
+          <p className="text-white/90 text-sm">
+            Guides and tips for your sustainability journey
+          </p>
+        </motion.div>
+      </div>
 
       {/* Resources Grid */}
       <div className="px-6 pb-6 space-y-4">

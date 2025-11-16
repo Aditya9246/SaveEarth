@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { BookOpen, Target, Users, Globe, BookMarked } from "lucide-react";
+import { BookOpen, Target, Users, Globe, BookMarked, TrendingUp } from "lucide-react";
 import { Screen } from "../App";
 
 interface BottomNavProps {
@@ -8,10 +8,10 @@ interface BottomNavProps {
 }
 
 const navItems = [
-  { id: "passport" as Screen, label: "Passport", icon: BookOpen },
+  { id: "passport" as Screen, label: "Score", icon: BookOpen },
   { id: "challenges" as Screen, label: "Challenges", icon: Target },
   { id: "feed" as Screen, label: "Feed", icon: Users },
-  { id: "team" as Screen, label: "Team", icon: Users },
+  { id: "leaderboard" as Screen, label: "Leaderboard", icon: TrendingUp },
   { id: "resources" as Screen, label: "Resources", icon: BookMarked },
 ];
 

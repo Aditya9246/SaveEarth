@@ -104,7 +104,7 @@ export function CelebrationScreen({ challenge, onViewPassport }: CelebrationScre
             onClick={onViewPassport}
             className="bg-white text-green-600 hover:bg-gray-100 rounded-full px-8 py-6"
           >
-            View My Passport
+            View My Score
           </Button>
         </motion.div>
       </motion.div>
