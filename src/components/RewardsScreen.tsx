@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { ArrowLeft, Gift, Lock, Check } from "lucide-react";
+import { rewards as allRewards } from "../data";
 
 interface RewardsScreenProps {
   onBack: () => void;
@@ -10,74 +11,16 @@ interface RewardsScreenProps {
   onRedeemReward: (rewardId: string, rewardPoints: number) => void;
 }
 
-const rewards = [
-  {
-    id: "discount-5",
-    title: "5% Off EcoStore",
-    points: 100,
-    icon: "🏪",
-    description: "Get 5% discount on sustainable products",
-    color: "from-green-400 to-emerald-400",
-  },
-  {
-    id: "discount-10",
-    title: "10% Off EcoStore",
-    points: 250,
-    icon: "🛍️",
-    description: "Get 10% discount on sustainable products",
-    color: "from-blue-400 to-cyan-400",
-  },
-  {
-    id: "coffee-voucher",
-    title: "Free Coffee Voucher",
-    points: 150,
-    icon: "☕",
-    description: "Redeem for free coffee at partner cafes",
-    color: "from-amber-400 to-orange-400",
-  },
-  {
-    id: "tree-planted",
-    title: "Plant a Tree",
-    points: 200,
-    icon: "🌳",
-    description: "We'll plant a tree in your name",
-    color: "from-green-500 to-lime-500",
-  },
-  {
-    id: "discount-20",
-    title: "20% Off EcoStore",
-    points: 500,
-    icon: "🎁",
-    description: "Get 20% discount on sustainable products",
-    color: "from-purple-400 to-pink-400",
-  },
-  {
-    id: "cleanup-kit",
-    title: "Beach Cleanup Kit",
-    points: 300,
-    icon: "🏖️",
-    description: "Free cleanup kit for your next beach day",
-    color: "from-blue-400 to-indigo-400",
-  },
-  {
-    id: "water-bottle",
-    title: "Premium Water Bottle",
-    points: 400,
-    icon: "💧",
-    description: "High-quality reusable water bottle",
-    color: "from-cyan-400 to-blue-500",
-  },
-  {
-    id: "tote-bag",
-    title: "Organic Tote Bag",
-    points: 180,
-    icon: "👜",
-    description: "Premium organic cotton tote bag",
-    color: "from-yellow-400 to-orange-400",
-  },
-];
-
-export function RewardsScreen({ onBack, totalPoints, redeemedRewards, onRedeemReward }: RewardsScreenProps) {
+export function RewardsScreen({
+  onBack,
+  totalPoints,
+  redeemedRewards,
+  onRedeemReward,
+}: RewardsScreenProps) {
+  const rewards = allRewards.map((reward) => ({
+    ...reward,
+    color: "from-green-400 to-emerald-400", // Default color
+  }));
   return (
     <div className="h-full overflow-y-auto">
       {/* Header */}
@@ -111,7 +54,7 @@ export function RewardsScreen({ onBack, totalPoints, redeemedRewards, onRedeemRe
           {rewards.map((reward, index) => {
             const isRedeemed = redeemedRewards.includes(reward.id);
             const canRedeem = totalPoints >= reward.points && !isRedeemed;
-            
+
             return (
               <motion.div
                 key={reward.id}
@@ -129,13 +72,15 @@ export function RewardsScreen({ onBack, totalPoints, redeemedRewards, onRedeemRe
                 <div className="flex items-start gap-3">
                   <div
                     className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${
-                      isRedeemed ? "from-green-400 to-emerald-500" : reward.color
+                      isRedeemed
+                        ? "from-green-400 to-emerald-500"
+                        : reward.color
                     } flex items-center justify-center text-2xl flex-shrink-0`}
                   >
                     {isRedeemed ? (
                       <Check className="w-8 h-8 text-white" />
                     ) : canRedeem ? (
-                      reward.icon
+                      "🎁"
                     ) : (
                       <Lock className="w-6 h-6 text-white" />
                     )}
@@ -165,13 +110,18 @@ export function RewardsScreen({ onBack, totalPoints, redeemedRewards, onRedeemRe
                         disabled={!canRedeem}
                         size="sm"
                         className={`rounded-full ${
-                          isRedeemed
-                            ? "bg-green-600 hover:bg-green-700"
-                            : ""
+                          isRedeemed ? "bg-green-600 hover:bg-green-700" : ""
                         }`}
-                        onClick={() => !isRedeemed && onRedeemReward(reward.id, reward.points)}
+                        onClick={() =>
+                          !isRedeemed &&
+                          onRedeemReward(reward.id, reward.points)
+                        }
                       >
-                        {isRedeemed ? "Redeemed" : canRedeem ? "Redeem" : "Locked"}
+                        {isRedeemed
+                          ? "Redeemed"
+                          : canRedeem
+                          ? "Redeem"
+                          : "Locked"}
                       </Button>
                     </div>
                   </div>

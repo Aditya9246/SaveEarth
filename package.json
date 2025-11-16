@@ -1,5 +1,5 @@
 {
-      "name": "EcoPassport Mobile App UI",
+      "name": "eco-passport-mobile-app-ui",
       "version": "0.1.0",
       "private": true,
       "dependencies": {
@@ -50,8 +50,11 @@
       },
       "devDependencies": {
             "@types/node": "^20.10.0",
+            "@types/react": "^19.2.5",
+            "@types/react-dom": "^19.2.3",
             "@vitejs/plugin-react-swc": "^3.10.2",
-            "vite": "6.3.5"
+            "typescript": "^5.9.3",
+            "vite": "^6.4.1"
       },
       "scripts": {
             "dev": "vite --host --port 3000 --no-open",

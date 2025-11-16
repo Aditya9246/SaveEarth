@@ -1,14 +1,24 @@
 import { motion } from "motion/react";
 import { Button } from "./ui/button";
 import { Sparkles } from "lucide-react";
+import { Challenge } from "../data";
 
 interface CelebrationScreenProps {
-  challenge: any;
+  challenge: Challenge | null;
   onViewPassport: () => void;
 }
 
-export function CelebrationScreen({ challenge, onViewPassport }: CelebrationScreenProps) {
-  const confettiColors = ["#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6"];
+export function CelebrationScreen({
+  challenge,
+  onViewPassport,
+}: CelebrationScreenProps) {
+  const confettiColors = [
+    "#10b981",
+    "#3b82f6",
+    "#f59e0b",
+    "#ef4444",
+    "#8b5cf6",
+  ];
 
   return (
     <div className="h-full relative overflow-hidden bg-gradient-to-br from-green-400 via-blue-400 to-purple-400 flex items-center justify-center p-8">
@@ -60,7 +70,7 @@ export function CelebrationScreen({ challenge, onViewPassport }: CelebrationScre
           className="mb-6"
         >
           <div className="relative mx-auto w-40 h-40 bg-white rounded-3xl shadow-2xl flex items-center justify-center">
-            <div className="text-7xl">{challenge?.icon}</div>
+            <div className="text-7xl">{challenge?.title}</div>
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
@@ -79,9 +89,7 @@ export function CelebrationScreen({ challenge, onViewPassport }: CelebrationScre
           transition={{ delay: 0.4 }}
         >
           <h1 className="text-white mb-2">STAMP ADDED!</h1>
-          <p className="text-white/90 mb-6">
-            {challenge?.title}
-          </p>
+          <p className="text-white/90 mb-6">{challenge?.title}</p>
         </motion.div>
 
         {/* Points Badge */}
@@ -91,7 +99,9 @@ export function CelebrationScreen({ challenge, onViewPassport }: CelebrationScre
           transition={{ delay: 0.6, type: "spring" }}
           className="inline-block bg-white rounded-full px-6 py-3 mb-8"
         >
-          <div className="text-green-600">+{challenge?.points} Impact Points</div>
+          <div className="text-green-600">
+            +{challenge?.points} Impact Points
+          </div>
         </motion.div>
 
         {/* Button */}

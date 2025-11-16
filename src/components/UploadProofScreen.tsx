@@ -5,9 +5,11 @@ import { X, ArrowLeft, Camera, Loader } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { ValidationResultScreen } from "./ValidationResultScreen";
 import { useCamera } from "../hooks/useCamera";
+import { Challenge } from "../data";
+import { ValidationResult } from "../types";
 
 interface UploadProofScreenProps {
-  challenge: any;
+  challenge: Challenge | null;
   onSubmit: () => void;
   onBack: () => void;
 }
@@ -19,7 +21,8 @@ export function UploadProofScreen({
 }: UploadProofScreenProps) {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [showValidation, setShowValidation] = useState(false);
-  const [validationResult, setValidationResult] = useState<any>(null);
+  const [validationResult, setValidationResult] =
+    useState<ValidationResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -48,7 +51,7 @@ export function UploadProofScreen({
 
     setIsLoading(true);
 
-    const queries = ["plastic bottle", "reusable coffee cup", "ship"];
+    const queries = challenge ? [challenge.title.toLowerCase()] : [];
 
     try {
       // Turn the data URL / blob URL into a Blob
@@ -58,7 +61,7 @@ export function UploadProofScreen({
       formData.append("image", blob, "photo.png"); // field name must match upload.single('image') on backend
       formData.append("queries", JSON.stringify(queries));
 
-      const response = await fetch("http://localhost:3000/validate-image", {
+      const response = await fetch("http://localhost:3001/validate-image", {
         method: "POST",
         // IMPORTANT: do NOT set Content-Type, browser will set correct multipart boundary
         body: formData,
@@ -98,9 +101,7 @@ export function UploadProofScreen({
         details: isValid
           ? "Great job! Your photo meets all the challenge criteria."
           : "Make sure your photo clearly shows the reusable items or sustainable action.",
-        // imageUrl: uploadedImage,
         challengeName: challenge?.title,
-        challengeIcon: challenge?.icon,
         raw: result,
       });
 
@@ -112,9 +113,7 @@ export function UploadProofScreen({
         message: "Submission Error",
         details:
           "We couldn't connect to the server or something went wrong. Please try again.",
-        imageUrl: uploadedImage,
         challengeName: challenge?.title,
-        challengeIcon: challenge?.icon,
       });
       setShowValidation(true);
     } finally {

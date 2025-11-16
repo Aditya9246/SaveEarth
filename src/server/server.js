@@ -24,27 +24,13 @@ class ValidatorPipeline {
   static model = 'Xenova/owlv2-base-patch16';
   static instance = null;
 
-<<<<<<< HEAD
   static async getInstance(progress_callback = null) {
     if (this.instance === null) {
       this.instance = pipeline(this.task, this.model, {
         cache_dir: path.join(__dirname, 'models'),
-        local_files_only: true,
+        local_files_only: false,
         progress_callback,
       });
-=======
-    // Static method to get the pipeline instance.
-    // If the instance doesn't exist, it's created.
-    static async getInstance(progress_callback = null) {
-        if (this.instance === null) {
-            this.instance = pipeline(this.task, this.model, {
-                cache_dir: path.join(__dirname, 'models'),
-                local_files_only: false,
-                progress_callback
-            });
-        }
-        return this.instance;
->>>>>>> b9061d17d33991476f2eb9566aff1540da5aabd2
     }
     return this.instance;
   }
@@ -56,7 +42,7 @@ const app = express();
 // CORS so frontend (8080) can talk to backend (3000)
 app.use(
   cors({
-    origin: 'http://localhost:8080',
+    origin: 'http://localhost:3000',
   })
 );
 
@@ -64,8 +50,12 @@ app.use(
 app.use(express.json());
 
 // ===== MULTER SETUP (file upload) 🔥 =====
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 const upload = multer({
-  dest: path.join(__dirname, 'uploads'), // folder inside container
+  dest: uploadsDir, // folder inside container
 });
 
 // ===== NEW ENDPOINT: multipart/form-data 🔥 =====
@@ -128,13 +118,6 @@ app.post(
 const PORT = 3000;
 
 app.listen(PORT, () => {
-<<<<<<< HEAD
   console.log(`Server is running on http://localhost:${PORT}`);
   ValidatorPipeline.getInstance(console.log);
-=======
-    console.log(`Server is running on http://localhost:${PORT}`);
-    // It's good practice to pre-load the model when the server starts
-    // to avoid a cold start on the first request.
-    ValidatorPipeline.getInstance();
->>>>>>> b9061d17d33991476f2eb9566aff1540da5aabd2
 });

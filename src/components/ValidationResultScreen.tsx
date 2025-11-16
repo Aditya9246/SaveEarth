@@ -8,9 +8,10 @@ import {
   Camera,
 } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { ValidationResult } from "../types";
 
 interface ValidationResultScreenProps {
-  result: any;
+  result: ValidationResult;
   onBack: () => void;
   onRetry?: () => void;
   onAccept?: () => void;
@@ -22,20 +23,19 @@ export function ValidationResultScreen({
   onRetry,
   onAccept,
 }: ValidationResultScreenProps) {
-  const isSuccess = Boolean(result?.isValid);
-  const confidence =
-    typeof result?.confidence === "number" ? result.confidence : 0;
+  
+  const {
+  isValid,
+  confidence = 0.6,
+  message,
+  details,
+  challengeName,
+  challengeIcon,
+  raw,
+  } = result;
 
-  const message =
-    result?.message ||
-    (isSuccess
-      ? "Your photo has been validated successfully!"
-      : "We couldn't verify this photo. Please try again.");
+  const isSuccess = isValid && confidence >= 0.6;
 
-  const details = result?.details as string | undefined;
-  const imageUrl = result?.imageUrl as string | undefined;
-  const challengeName = result?.challengeName as string | undefined;
-  const challengeIcon = result?.challengeIcon as string | undefined;
 
   return (
     <div className="h-full flex flex-col bg-gradient-to-b from-gray-50 to-white">
@@ -134,30 +134,6 @@ export function ValidationResultScreen({
           </motion.div>
         )}
 
-        {/* Submitted Image */}
-        {imageUrl && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-            className="mb-6"
-          >
-            <div className="flex items-center gap-2 mb-3">
-              <Camera className="w-4 h-4 text-gray-600" />
-              <h3 className="text-gray-800 text-sm font-medium">
-                Your Submission
-              </h3>
-            </div>
-            <div className="relative rounded-2xl overflow-hidden border-2 border-gray-200">
-              <ImageWithFallback
-                src={imageUrl}
-                alt="Submitted proof"
-                className="w-full aspect-square object-cover"
-              />
-            </div>
-          </motion.div>
-        )}
-
         {/* Details Section */}
         {details && (
           <motion.div
@@ -192,7 +168,9 @@ export function ValidationResultScreen({
             <ul className="space-y-2 text-sm text-gray-600">
               <li className="flex items-start gap-2">
                 <span className="text-purple-600 flex-shrink-0">•</span>
-                <span>Make sure the subject is clearly visible and in focus</span>
+                <span>
+                  Make sure the subject is clearly visible and in focus
+                </span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-600 flex-shrink-0">•</span>
@@ -272,7 +250,7 @@ export function ValidationResultScreen({
             Raw Validation Result
           </summary>
           <pre className="text-xs text-gray-700 overflow-x-auto">
-            {JSON.stringify(result, null, 2)}
+            {JSON.stringify(raw, null, 2)}
           </pre>
         </motion.details>
       </div>

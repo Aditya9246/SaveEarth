@@ -11,7 +11,7 @@ const navItems = [
   { id: "passport" as Screen, label: "Score", icon: BookOpen },
   { id: "challenges" as Screen, label: "Challenges", icon: Target },
   { id: "feed" as Screen, label: "Feed", icon: Users },
-  { id: "leaderboard" as Screen, label: "Leaderboard", icon: TrendingUp },
+  { id: "team" as Screen, label: "Team", icon: TrendingUp },
   { id: "resources" as Screen, label: "Resources", icon: BookMarked },
 ];
 
