@@ -10,7 +10,8 @@ import { ImpactMapScreen } from "./components/ImpactMapScreen";
 import { ResourceHubScreen } from "./components/ResourceHubScreen";
 import { RewardsScreen } from "./components/RewardsScreen";
 import { BottomNav } from "./components/BottomNav";
-import { Challenge, challenges, rewards } from "./data";
+import type { Challenge } from "./data";
+import { rewards } from "./data";
 
 export type Screen =
   | "onboarding"
@@ -32,6 +33,7 @@ export default function App() {
   );
   const [completedStamps, setCompletedStamps] = useState<string[]>([]);
   const [redeemedRewards, setRedeemedRewards] = useState<string[]>([]);
+  const [earnedPoints, setEarnedPoints] = useState<number>(0);
 
   const handleCompleteOnboarding = () => {
     setHasCompletedOnboarding(true);
@@ -45,7 +47,10 @@ export default function App() {
 
   const handleProofSubmitted = () => {
     if (selectedChallenge) {
-      setCompletedStamps([...completedStamps, selectedChallenge.id]);
+      // mark stamp complete
+      setCompletedStamps((prev) => [...prev, selectedChallenge.id]);
+      // add points from this challenge
+      setEarnedPoints((prev) => prev + (selectedChallenge.points || 0));
     }
     setCurrentScreen("celebration");
   };
@@ -54,22 +59,18 @@ export default function App() {
     setCurrentScreen("passport");
   };
 
-  // Calculate total points from completed challenges
-  const earnedPoints = completedStamps.reduce((sum, stampId) => {
-    const challenge = challenges.find((c) => c.id === stampId);
-    return sum + (challenge?.points || 0);
-  }, 0);
-
   const handleRedeemReward = (rewardId: string, rewardPoints: number) => {
-    setRedeemedRewards([...redeemedRewards, rewardId]);
+    // you can add point checks here if you want later
+    setRedeemedRewards((prev) => [...prev, rewardId]);
   };
 
-  // Calculate available points (earned minus redeemed)
+  // Calculate total spent points from redeemed rewards
   const spentPoints = redeemedRewards.reduce((sum, rewardId) => {
     const reward = rewards.find((r) => r.id === rewardId);
     return sum + (reward?.points || 0);
   }, 0);
 
+  // Available points = earned - spent
   const totalPoints = earnedPoints - spentPoints;
 
   const renderScreen = () => {

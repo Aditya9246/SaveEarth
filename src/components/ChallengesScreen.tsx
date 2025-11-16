@@ -9,7 +9,9 @@ import {
   Gift,
   ChevronRight,
 } from "lucide-react";
-import { Challenge, challenges } from "../data";
+
+import { Challenge } from "../data";
+import { useChallenges } from "../hooks/useChallenges";
 
 interface ChallengesScreenProps {
   onSelectChallenge: (challenge: Challenge) => void;
@@ -42,6 +44,8 @@ export function ChallengesScreen({
   onOpenRewards,
   totalPoints,
 }: ChallengesScreenProps) {
+  const { challenges, loading, error } = useChallenges();
+
   const bronzeChallenges = challenges.filter(
     (c) => (c.category === "Food" || c.category === "Home") && c.points < 40
   );
@@ -110,9 +114,7 @@ export function ChallengesScreen({
                           onClick={() => onSelectChallenge(challenge)}
                           size="sm"
                           className="rounded-full"
-                          variant={
-                            difficulty === "bronze" ? "default" : "default"
-                          }
+                          variant="default"
                         >
                           {difficulty === "bronze"
                             ? "Accept"
@@ -130,9 +132,24 @@ export function ChallengesScreen({
     );
   };
 
+  if (loading) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <p className="text-gray-500 text-sm">Loading challenges…</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <p className="text-red-500 text-sm">{error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="h-full overflow-y-auto">
-      {/* Rewards Section */}
       <div className="p-6 pb-4">
         <motion.button
           initial={{ opacity: 0, y: -20 }}
@@ -154,8 +171,16 @@ export function ChallengesScreen({
       </div>
 
       <div className="px-6 pb-6">
-        {renderChallengeSection("Bronze Challenges", bronzeChallenges, "bronze")}
-        {renderChallengeSection("Silver Challenges", silverChallenges, "silver")}
+        {renderChallengeSection(
+          "Bronze Challenges",
+          bronzeChallenges,
+          "bronze"
+        )}
+        {renderChallengeSection(
+          "Silver Challenges",
+          silverChallenges,
+          "silver"
+        )}
         {renderChallengeSection("Gold Challenges", goldChallenges, "gold")}
       </div>
     </div>

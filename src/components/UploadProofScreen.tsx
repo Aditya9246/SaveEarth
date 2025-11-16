@@ -5,7 +5,7 @@ import { X, ArrowLeft, Camera, Loader } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { ValidationResultScreen } from "./ValidationResultScreen";
 import { useCamera } from "../hooks/useCamera";
-import { Challenge } from "../data";
+import type { Challenge } from "../data";
 import { ValidationResult } from "../types";
 
 interface UploadProofScreenProps {
@@ -37,7 +37,8 @@ export function UploadProofScreen({
   const handleCaptureAndSet = () => {
     const photoDataUrl = capturePhoto();
     if (photoDataUrl) {
-      setUploadedImage(photoDataUrl); // this is a data URL (or blob URL)
+      // data URL (or blob URL) from camera
+      setUploadedImage(photoDataUrl);
       stopCamera();
     }
   };
@@ -49,21 +50,34 @@ export function UploadProofScreen({
   const handleValidationSubmit = async () => {
     if (!uploadedImage) return;
 
+    // we really expect a challenge here; if not, bail safely
+    if (!challenge) {
+      console.error("No challenge provided to UploadProofScreen");
+      return;
+    }
+
     setIsLoading(true);
 
-    const queries = challenge ? [challenge.title.toLowerCase()] : [];
+    // 🔑 Use queries from the challenge, fall back to title if needed
+    const queries =
+      Array.isArray(challenge.queries) && challenge.queries.length > 0
+        ? challenge.queries
+        : [challenge.title.toLowerCase()];
 
     try {
       // Turn the data URL / blob URL into a Blob
       const blob = await fetch(uploadedImage).then((res) => res.blob());
 
       const formData = new FormData();
-      formData.append("image", blob, "photo.png"); // field name must match upload.single('image') on backend
+      // field name 'image' must match upload.single('image') on backend
+      formData.append("image", blob, "photo.png");
       formData.append("queries", JSON.stringify(queries));
+      formData.append("challengeId", challenge.id);
+      formData.append("challengeTitle", challenge.title);
 
       const response = await fetch("http://localhost:3001/validate-image", {
         method: "POST",
-        // IMPORTANT: do NOT set Content-Type, browser will set correct multipart boundary
+        // don't set Content-Type manually; browser sets multipart boundary
         body: formData,
       });
 
@@ -101,7 +115,7 @@ export function UploadProofScreen({
         details: isValid
           ? "Great job! Your photo meets all the challenge criteria."
           : "Make sure your photo clearly shows the reusable items or sustainable action.",
-        challengeName: challenge?.title,
+        challengeName: challenge.title,
         raw: result,
       });
 
