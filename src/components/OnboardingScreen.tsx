@@ -5,6 +5,10 @@ import { Input } from "./ui/input";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { Leaf, Mail, Lock } from "lucide-react";
 
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+
 interface OnboardingScreenProps {
   onComplete: () => void;
 }
@@ -13,10 +17,34 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    onComplete();
+    console.log("Logging in with:", email, password);
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.log("Logged in:", userCredential.user);
+      onComplete();
+    } catch (err: any) {
+      console.error("Login failed:", err.message);
+      alert(err.message);
+    }
   };
+
+  const handleSignup = async () => {
+    console.log("Signup clicked with:", email, password);
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      console.log("Signup success:", userCredential.user);
+      alert("Account created!");
+      onComplete();
+    } catch (err: any) {
+      console.error("Signup failed:", err.message);
+      alert(err.message);
+    }
+  };
+
 
   return (
     <div className="h-full flex flex-col justify-center p-8">
@@ -103,9 +131,18 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
         </button>
         <div className="text-gray-600 text-sm">
           Don't have an account?{" "}
-          <button className="text-green-600 hover:underline">
+          <button
+            type="button"
+            className="text-green-600 hover:underline"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleSignup();
+            }}
+          >
             Sign up
           </button>
+
         </div>
       </motion.div>
     </div>
