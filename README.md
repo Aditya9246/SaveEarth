@@ -1,6 +1,3 @@
-Here is the full README in **clean Markdown format (.md)** — you can paste this directly into `README.md`:
-
----
 
 ````markdown
 # SeaScore / SaveEarth 🌍  
@@ -12,7 +9,7 @@ SeaScore (also called SaveEarth) is a mobile app designed to encourage users to 
 The goal:  
 **Turn sustainability into a fun, social, and rewarding experience.**
 
----
+
 
 ## 🧰 Tech Stack
 | Layer | Technology |
@@ -26,7 +23,7 @@ The goal:
 | Model Runtime | @xenova/transformers |
 | Design | Figma UI |
 
----
+
 
 ## ⚙️ Setup Instructions
 
