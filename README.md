@@ -55,6 +55,7 @@ npm start
 Make sure the model is downloaded first:
 
 node src/server/download-model.mjs
+
 docker-compose up -d
 
 
