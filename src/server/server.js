@@ -1,6 +1,11 @@
 // server.js
 
 // Import necessary libraries
+import { env } from '@xenova/transformers';
+
+env.allowRemoteModels = true;
+env.localFilesOnly = false;
+
 import express from 'express';
 import { pipeline } from '@xenova/transformers';
 import path from 'path';
@@ -22,8 +27,8 @@ class ValidatorPipeline {
     static async getInstance(progress_callback = null) {
         if (this.instance === null) {
             this.instance = pipeline(this.task, this.model, {
-                cache_dir: path.join(__dirname, 'models'), // Use the local models directory
-                local_files_only: true, // Force loading from local files only
+                cache_dir: path.join(__dirname, 'models'),
+                local_files_only: false,
                 progress_callback
             });
         }
@@ -71,5 +76,5 @@ app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
     // It's good practice to pre-load the model when the server starts
     // to avoid a cold start on the first request.
-    ValidatorPipeline.getInstance(console.log);
+    ValidatorPipeline.getInstance();
 });
