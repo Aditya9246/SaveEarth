@@ -1,35 +1,36 @@
-### SeaScore / SaveEarth 🌍
-
+# SeaScore / SaveEarth 🌍
 An eco-conscious mobile app that rewards users for taking real environmental action.
 
 ## 🚀 Project Overview
+SeaScore (also called SaveEarth) motivates users to reduce plastic waste and protect the oceans. Users complete real-world sustainability challenges, upload proof, earn points, unlock rewards, and engage with a community of eco-active people.
 
-SeaScore (also called SaveEarth) is a mobile app designed to encourage users to reduce plastic waste and protect the oceans. Users complete real-world sustainability challenges, upload photo proof, earn points, unlock rewards, and join a community of environmentally active people.
+**Goal:** Make sustainability fun, social, and rewarding. 🌱
 
-The goal:
-Turn sustainability into a fun, social, and rewarding experience.
+---
 
 ## 🧰 Tech Stack
+**Frontend:** React Native (Expo)  
+**Backend:** Node.js + Express  
+**Machine Learning:** Xenova OWLv2 (Zero-Shot Detection)  
+**Auth / Database:** Firebase Authentication + Realtime Database  
+**Deployment:** Docker + Docker Compose  
+**Uploads:** multer  
+**Model Runtime:** @xenova/transformers  
+**Design:** Figma UI  
 
-Frontend: React Native (Expo)
-Backend: Node.js + Express
-Machine Learning: Xenova OWLv2 Zero-Shot Detection
-Auth & Database: Firebase Authentication + Firebase Realtime Database
-Deployment: Docker + Docker Compose
-Upload Handling: multer
-Model Runtime: @xenova/transformers
-Design: Figma UI
+---
 
 ## ⚙️ Setup Instructions
-Prerequisites
 
-Node.js + npm
+### Prerequisites
+- Node.js + npm
+- Docker (optional but recommended)
 
-## Docker + Docker Compose
-
-1. Clone the repository
+### 1. Clone the Repository
+```bash
 git clone https://github.com/your-username/SaveEarth.git
 cd SaveEarth
+
 
 2. Install dependencies
 
