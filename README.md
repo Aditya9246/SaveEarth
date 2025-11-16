@@ -1,88 +1,66 @@
+SeaScore / SaveEarth 🌍
 
-````markdown
-# SeaScore / SaveEarth 🌍  
 An eco-conscious mobile app that rewards users for taking real environmental action.
 
-## 🚀 Project Overview
+🚀 Project Overview
+
 SeaScore (also called SaveEarth) is a mobile app designed to encourage users to reduce plastic waste and protect the oceans. Users complete real-world sustainability challenges, upload photo proof, earn points, unlock rewards, and join a community of environmentally active people.
 
-The goal:  
-**Turn sustainability into a fun, social, and rewarding experience.**
+The goal:
+Turn sustainability into a fun, social, and rewarding experience.
 
+🧰 Tech Stack
 
+Frontend: React Native (Expo)
+Backend: Node.js + Express
+Machine Learning: Xenova OWLv2 Zero-Shot Detection
+Auth & Database: Firebase Authentication + Firebase Realtime Database
+Deployment: Docker + Docker Compose
+Upload Handling: multer
+Model Runtime: @xenova/transformers
+Design: Figma UI
 
-## 🧰 Tech Stack
-| Layer | Technology |
-|-------|------------|
-| Frontend | React Native (Expo) |
-| Backend | Node.js + Express |
-| ML Model | Xenova OWLv2 (zero-shot object detection) |
-| Auth & DB | Firebase Authentication + Firebase Realtime Database |
-| Deployment | Docker + Docker Compose |
-| File Uploads | multer |
-| Model Runtime | @xenova/transformers |
-| Design | Figma UI |
+⚙️ Setup Instructions
+Prerequisites
 
+Node.js + npm
 
+Docker + Docker Compose
 
-## ⚙️ Setup Instructions
-
-### Prerequisites
-- Node.js and npm  
-- Docker and Docker Compose  
-- (Optional) Expo CLI for mobile dev  
-
-### 1. Clone the repository
-```bash
+1. Clone the repository
 git clone https://github.com/your-username/SaveEarth.git
 cd SaveEarth
-````
 
-### 2. Install dependencies
+2. Install dependencies
 
-#### Client
+Client:
 
-```bash
 npm install
-```
 
-#### Server
 
-```bash
+Server:
+
 cd src/server
 npm install
 cd ../..
-```
 
-### 3. Download the ML model
-
-```bash
+3. Download the ML model
 node src/server/download-model.mjs
-```
 
-### 4. Run locally
-
-```bash
+4. Run locally
 npm start
-```
 
----
+🐳 Running with Docker
 
-## 🐳 Running with Docker
+Make sure the model is downloaded first:
 
-Make sure the model is downloaded first.
-
-```bash
 node src/server/download-model.mjs
 docker-compose up -d
-```
 
-The application will be available at:
 
-```
+App will be available at:
+
 http://localhost:3000
-```
-
 ---
 
 ## 🌟 Key Features
