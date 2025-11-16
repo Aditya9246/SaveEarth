@@ -10,7 +10,7 @@ import { ValidationResult } from "../types";
 
 interface UploadProofScreenProps {
   challenge: Challenge | null;
-  onSubmit: () => void;
+  onSubmit: (imageUrl: string) => void; // 👈 changed
   onBack: () => void;
 }
 
@@ -39,7 +39,7 @@ export function UploadProofScreen({
   const handleCaptureAndSet = () => {
     const photoDataUrl = capturePhoto();
     if (photoDataUrl) {
-      setUploadedImage(photoDataUrl); // data URL (or blob URL)
+      setUploadedImage(photoDataUrl);
       stopCamera();
     }
   };
@@ -50,8 +50,6 @@ export function UploadProofScreen({
 
   const handleValidationSubmit = async () => {
     if (!uploadedImage) return;
-
-    // We really expect a challenge; if not, do nothing safely
     if (!challenge) {
       console.error("No challenge provided to UploadProofScreen");
       return;
@@ -59,25 +57,22 @@ export function UploadProofScreen({
 
     setIsLoading(true);
 
-    // Use queries from the challenge, fallback to title if needed
     const queries =
       Array.isArray(challenge.queries) && challenge.queries.length > 0
         ? challenge.queries
         : [challenge.title.toLowerCase()];
 
     try {
-      // Turn the data URL / blob URL into a Blob
       const blob = await fetch(uploadedImage).then((res) => res.blob());
 
       const formData = new FormData();
-      formData.append("image", blob, "photo.png"); // must match backend field name
+      formData.append("image", blob, "photo.png");
       formData.append("queries", JSON.stringify(queries));
       formData.append("challengeId", challenge.id);
       formData.append("challengeTitle", challenge.title);
 
       const response = await fetch("http://localhost:3001/validate-image", {
         method: "POST",
-        // don't set Content-Type manually; browser sets multipart boundary
         body: formData,
       });
 
@@ -90,9 +85,6 @@ export function UploadProofScreen({
       const result = await response.json();
       console.log("Validation Result (raw):", result);
 
-      // Support:
-      //  - raw array from Xenova: [{ score, box, label, ... }]
-      //  - wrapped: { detections: [...] }
       const detections = Array.isArray(result)
         ? result
         : Array.isArray(result.detections)
@@ -106,7 +98,6 @@ export function UploadProofScreen({
           ? detections[0].score
           : 0;
 
-      // ✅ enforce 60% confidence threshold for "success"
       const passesThreshold = hasDetection && topScore >= MIN_CONFIDENCE;
 
       setValidationResult({
@@ -154,12 +145,13 @@ export function UploadProofScreen({
   };
 
   const handleValidationAccept = () => {
-    onSubmit();
+    if (uploadedImage) {
+      onSubmit(uploadedImage); // 👈 send the proof image up to App
+    }
   };
 
   // --- RENDER ---
 
-  // Camera view
   if (isCameraOpen) {
     return (
       <div className="h-full flex flex-col bg-black">
@@ -171,7 +163,6 @@ export function UploadProofScreen({
         />
         <canvas ref={canvasRef} className="hidden" />
         <div className="flex justify-center items-center gap-4 p-4">
-          {/* Capture button */}
           <Button
             onClick={handleCaptureAndSet}
             size="lg"
@@ -179,8 +170,6 @@ export function UploadProofScreen({
           >
             <Camera className="w-8 h-8" />
           </Button>
-
-          {/* Cancel button */}
           <Button
             onClick={stopCamera}
             className="rounded-full bg-gradient-to-r from-green-500 to-blue-500 text-white hover:from-green-600 hover:to-blue-600"
@@ -192,7 +181,6 @@ export function UploadProofScreen({
     );
   }
 
-  // Validation result screen
   if (showValidation && validationResult) {
     return (
       <ValidationResultScreen
@@ -204,7 +192,6 @@ export function UploadProofScreen({
     );
   }
 
-  // Main upload screen
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
@@ -300,7 +287,6 @@ export function UploadProofScreen({
         </motion.div>
       </div>
 
-      {/* Extra hidden canvas to keep ref mounted in non-camera mode */}
       <canvas ref={canvasRef} className="hidden" />
     </div>
   );

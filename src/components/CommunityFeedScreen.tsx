@@ -3,54 +3,23 @@ import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { Heart, MessageCircle } from "lucide-react";
 import { Button } from "./ui/button";
 
-const feedPosts = [
-  {
-    id: 1,
-    userName: "Alex Rivers",
-    userAvatar: "https://images.unsplash.com/photo-1672462478040-a5920e2c23d8?w=100&h=100&fit=crop",
-    challengeIcon: "🥗",
-    challengeName: "Zero-Waste Lunch Challenge",
-    proofImage: "https://images.unsplash.com/photo-1672886941662-e40d4c2428a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx6ZXJvJTIwd2FzdGUlMjBsdW5jaCUyMHN1c3RhaW5hYmxlfGVufDF8fHx8MTc2MzIzMjc2N3ww&ixlib=rb-4.1.0&q=80&w=1080",
-    likes: 42,
-    comments: 8,
-    timeAgo: "2h ago",
-  },
-  {
-    id: 2,
-    userName: "Maya Chen",
-    userAvatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop",
-    challengeIcon: "💧",
-    challengeName: "Reusable Bottle Challenge",
-    proofImage: "https://images.unsplash.com/photo-1605274280925-9dd1baacb97b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXVzYWJsZSUyMHdhdGVyJTIwYm90dGxlJTIwZWNvfGVufDF8fHx8MTc2MzE0NjQwNnww&ixlib=rb-4.1.0&q=80&w=1080",
-    likes: 31,
-    comments: 5,
-    timeAgo: "4h ago",
-  },
-  {
-    id: 3,
-    userName: "Jordan Lee",
-    userAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
-    challengeIcon: "🏖️",
-    challengeName: "Beach Cleanup Challenge",
-    proofImage: "https://images.unsplash.com/photo-1610093666020-baec20684087?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiZWFjaCUyMGNsZWFudXAlMjBvY2VhbnxlbnwxfHx8fDE3NjMyMTg2MTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    likes: 89,
-    comments: 15,
-    timeAgo: "6h ago",
-  },
-  {
-    id: 4,
-    userName: "Sam Taylor",
-    userAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop",
-    challengeIcon: "🛍️",
-    challengeName: "Reusable Bags Challenge",
-    proofImage: "https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8?w=800&fit=crop",
-    likes: 25,
-    comments: 3,
-    timeAgo: "8h ago",
-  },
-];
+export interface FeedPost {
+  id: string;
+  userName: string;
+  userAvatar: string;
+  challengeIcon: string;
+  challengeName: string;
+  proofImage: string;
+  likes: number;
+  comments: number;
+  timeAgo: string;
+}
 
-export function CommunityFeedScreen() {
+interface CommunityFeedScreenProps {
+  posts: FeedPost[];
+}
+
+export function CommunityFeedScreen({ posts }: CommunityFeedScreenProps) {
   return (
     <div className="h-full overflow-y-auto">
       {/* Header */}
@@ -69,12 +38,12 @@ export function CommunityFeedScreen() {
 
       {/* Feed Posts */}
       <div className="px-6 pb-6 space-y-4">
-        {feedPosts.map((post, index) => (
+        {posts.map((post, index) => (
           <motion.div
             key={post.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
+            transition={{ delay: index * 0.05 }}
             className="bg-white rounded-2xl overflow-hidden shadow-sm"
           >
             {/* Post Header */}
@@ -123,6 +92,12 @@ export function CommunityFeedScreen() {
             </div>
           </motion.div>
         ))}
+
+        {posts.length === 0 && (
+          <p className="text-center text-gray-500 text-sm mt-6">
+            No posts yet. Complete a challenge to share your first win!
+          </p>
+        )}
       </div>
     </div>
   );
