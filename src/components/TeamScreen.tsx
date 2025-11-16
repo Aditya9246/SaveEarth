@@ -8,18 +8,30 @@ interface TeamScreenProps {
   userPoints: number;
 }
 
-const teamMembers = [
+interface TeamMember {
+  id: number | string;
+  name: string;
+  avatar: string;
+  points?: number; // will get filled in for current user
+  rank: number;
+  isCurrentUser: boolean;
+}
+
+// Base team members (points for everyone except current user are defaults)
+const teamMembers: TeamMember[] = [
   {
     id: 1,
     name: "Pratul Saini",
-    avatar: "https://media.licdn.com/dms/image/v2/D5603AQFjHMOYPJmJHA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1723360379238?e=1764806400&v=beta&t=Fnx3EGy5ELH784-cMe3w5HH04iASrH9XdvVikSqUZ4I",
+    avatar:
+      "https://media.licdn.com/dms/image/v2/D5603AQFjHMOYPJmJHA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1723360379238?e=1764806400&v=beta&t=Fnx3EGy5ELH784-cMe3w5HH04iASrH9XdvVikSqUZ4I",
     rank: 1,
     isCurrentUser: true,
   },
   {
     id: 2,
     name: "Nipun Saini",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
+    avatar:
+      "https://media.licdn.com/dms/image/v2/D5603AQFKmdq9RHbF7Q/profile-displayphoto-scale_400_400/B56ZmYnL7sJwAg-/0/1759202034050?e=1764806400&v=beta&t=6HoavbtvsZLUzYZAKptBE2910t2cRfqjEaCgBli6J14",
     points: 320,
     rank: 2,
     isCurrentUser: false,
@@ -27,7 +39,8 @@ const teamMembers = [
   {
     id: 3,
     name: "Jinay Doshi",
-    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop",
+    avatar:
+      "https://media.licdn.com/dms/image/v2/D5603AQGkwRY5Xy-xng/profile-displayphoto-crop_800_800/B56ZpsOQROHIAI-/0/1762752269070?e=1764806400&v=beta&t=TinxdbI_ng4EVG8wXxOpEk4d7yLIcL-Fu0BIBLMmS_8",
     points: 285,
     rank: 3,
     isCurrentUser: false,
@@ -35,7 +48,8 @@ const teamMembers = [
   {
     id: 4,
     name: "Aditya Gajula",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop",
+    avatar:
+      "https://media.licdn.com/dms/image/v2/D5603AQExK6Lxk3Bwrg/profile-displayphoto-scale_400_400/B56ZqMOZtHJoAk-/0/1763289178377?e=1764806400&v=beta&t=iqyoxp_I5seR04SjDiI4Exv_5IjTRaLj6EdYcCmmYl4",
     points: 240,
     rank: 4,
     isCurrentUser: false,
@@ -43,20 +57,27 @@ const teamMembers = [
 ];
 
 export function TeamScreen({ userPoints }: TeamScreenProps) {
-  // Update Sarah's points with the actual user points
-  const updatedMembers = teamMembers.map(member => 
+  // Update current user's points with the actual userPoints
+  const updatedMembers = teamMembers.map((member) =>
     member.isCurrentUser ? { ...member, points: userPoints } : member
   );
-  
-  // Sort members by points to update rankings
-  const sortedMembers = [...updatedMembers].sort((a, b) => b.points - a.points);
+
+  // Sort members by points to update rankings (highest → lowest)
+  const sortedMembers = [...updatedMembers].sort(
+    (a, b) => (b.points ?? 0) - (a.points ?? 0)
+  );
+
   const membersWithUpdatedRank = sortedMembers.map((member, index) => ({
     ...member,
-    rank: index + 1
+    points: member.points ?? 0,
+    rank: index + 1,
   }));
-  
+
   const topContributor = membersWithUpdatedRank[0];
-  const totalPoints = membersWithUpdatedRank.reduce((sum, member) => sum + member.points, 0);
+  const totalPoints = membersWithUpdatedRank.reduce(
+    (sum, member) => sum + member.points,
+    0
+  );
 
   return (
     <div className="h-full overflow-y-auto">
@@ -129,7 +150,7 @@ export function TeamScreen({ userPoints }: TeamScreenProps) {
             <Crown className="w-5 h-5 text-yellow-500" />
             <div>
               <div className="text-sm text-gray-600">Top Contributor</div>
-              <div className="text-gray-800">{topContributor.name}</div>
+              <div className="text-gray-800">{topContributor?.name}</div>
             </div>
           </div>
         </motion.div>
@@ -142,7 +163,10 @@ export function TeamScreen({ userPoints }: TeamScreenProps) {
         >
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-gray-800">Leaderboard</h3>
-            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+            <Badge
+              variant="outline"
+              className="bg-blue-50 text-blue-700 border-blue-200"
+            >
               This Week
             </Badge>
           </div>
@@ -188,7 +212,9 @@ export function TeamScreen({ userPoints }: TeamScreenProps) {
                   <div className="text-gray-800">
                     {member.name}
                     {member.isCurrentUser && (
-                      <span className="text-green-600 text-sm ml-2">(You)</span>
+                      <span className="text-green-600 text-sm ml-2">
+                        (You)
+                      </span>
                     )}
                   </div>
                 </div>

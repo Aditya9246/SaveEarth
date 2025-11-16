@@ -38,6 +38,10 @@ const difficultyConfig = {
   },
 };
 
+// helper to sort by points (least → most)
+const sortByPoints = (items: Challenge[]) =>
+  [...items].sort((a, b) => (a.points || 0) - (b.points || 0));
+
 export function ChallengesScreen({
   onSelectChallenge,
   completedStamps,
@@ -46,13 +50,22 @@ export function ChallengesScreen({
 }: ChallengesScreenProps) {
   const { challenges, loading, error } = useChallenges();
 
-  const bronzeChallenges = challenges.filter(
-    (c) => (c.category === "Food" || c.category === "Home") && c.points < 40
+  // Filter then sort by points ascending
+  const bronzeChallenges = sortByPoints(
+    challenges.filter(
+      (c) => (c.category === "Food" || c.category === "Home") && c.points < 40
+    )
   );
-  const silverChallenges = challenges.filter(
-    (c) => (c.category === "Food" || c.category === "Home") && c.points >= 40
+
+  const silverChallenges = sortByPoints(
+    challenges.filter(
+      (c) => (c.category === "Food" || c.category === "Home") && c.points >= 40
+    )
   );
-  const goldChallenges = challenges.filter((c) => c.category === "Community");
+
+  const goldChallenges = sortByPoints(
+    challenges.filter((c) => c.category === "Community")
+  );
 
   const renderChallengeSection = (
     title: string,

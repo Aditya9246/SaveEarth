@@ -25,12 +25,14 @@ export type Screen =
   | "resources"
   | "rewards";
 
-const INITIAL_FEED_POSTS: FeedPost[] = [
+
+
+const INITIAL_FEED_POSTS = [
   {
     id: "seed-1",
-    userName: "Alex Rivers",
+    userName: "Pratul Saini",
     userAvatar:
-      "https://images.unsplash.com/photo-1672462478040-a5920e2c23d8?w=100&h=100&fit=crop",
+      "https://media.licdn.com/dms/image/v2/D5603AQFjHMOYPJmJHA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1723360379238?e=1764806400&v=beta&t=Fnx3EGy5ELH784-cMe3w5HH04iASrH9XdvVikSqUZ4I",
     challengeIcon: "🥗",
     challengeName: "Zero-Waste Lunch Challenge",
     proofImage:
@@ -41,9 +43,9 @@ const INITIAL_FEED_POSTS: FeedPost[] = [
   },
   {
     id: "seed-2",
-    userName: "Maya Chen",
+    userName: "Nipun Saini",
     userAvatar:
-      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop",
+      "https://media.licdn.com/dms/image/v2/D5603AQFKmdq9RHbF7Q/profile-displayphoto-scale_400_400/B56ZmYnL7sJwAg-/0/1759202034050?e=1764806400&v=beta&t=6HoavbtvsZLUzYZAKptBE2910t2cRfqjEaCgBli6J14",
     challengeIcon: "💧",
     challengeName: "Reusable Bottle Challenge",
     proofImage:
@@ -54,9 +56,9 @@ const INITIAL_FEED_POSTS: FeedPost[] = [
   },
   {
     id: "seed-3",
-    userName: "Jordan Lee",
+    userName: "Jinay Doshi",
     userAvatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
+      "https://media.licdn.com/dms/image/v2/D5603AQGkwRY5Xy-xng/profile-displayphoto-crop_800_800/B56ZpsOQROHIAI-/0/1762752269070?e=1764806400&v=beta&t=TinxdbI_ng4EVG8wXxOpEk4d7yLIcL-Fu0BIBLMmS_8",
     challengeIcon: "🏖️",
     challengeName: "Beach Cleanup Challenge",
     proofImage:
@@ -67,9 +69,9 @@ const INITIAL_FEED_POSTS: FeedPost[] = [
   },
   {
     id: "seed-4",
-    userName: "Sam Taylor",
+    userName: "Aditya Gajula",
     userAvatar:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop",
+      "https://media.licdn.com/dms/image/v2/D5603AQExK6Lxk3Bwrg/profile-displayphoto-scale_400_400/B56ZqMOZtHJoAk-/0/1763289178377?e=1764806400&v=beta&t=iqyoxp_I5seR04SjDiI4Exv_5IjTRaLj6EdYcCmmYl4",
     challengeIcon: "🛍️",
     challengeName: "Reusable Bags Challenge",
     proofImage:
@@ -79,6 +81,7 @@ const INITIAL_FEED_POSTS: FeedPost[] = [
     timeAgo: "8h ago",
   },
 ];
+
 
 // simple helper to pick an icon from challenge category
 function getChallengeIcon(challenge: Challenge): string {
