@@ -60,7 +60,7 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
           className="mb-6"
         >
           <ImageWithFallback
-            src="https://img.freepik.com/free-vector/save-planet-concept_23-2148512147.jpg?semt=ais_hybrid&w=740&q=80"
+            src="SaveScoreLogo.png"
             alt="Save the Planet"
             className="w-32 h-32 object-cover rounded-full mx-auto"
           />
