@@ -1,15 +1,15 @@
-SeaScore / SaveEarth 🌍
+### SeaScore / SaveEarth 🌍
 
 An eco-conscious mobile app that rewards users for taking real environmental action.
 
-🚀 Project Overview
+## 🚀 Project Overview
 
 SeaScore (also called SaveEarth) is a mobile app designed to encourage users to reduce plastic waste and protect the oceans. Users complete real-world sustainability challenges, upload photo proof, earn points, unlock rewards, and join a community of environmentally active people.
 
 The goal:
 Turn sustainability into a fun, social, and rewarding experience.
 
-🧰 Tech Stack
+## 🧰 Tech Stack
 
 Frontend: React Native (Expo)
 Backend: Node.js + Express
@@ -20,12 +20,12 @@ Upload Handling: multer
 Model Runtime: @xenova/transformers
 Design: Figma UI
 
-⚙️ Setup Instructions
+## ⚙️ Setup Instructions
 Prerequisites
 
 Node.js + npm
 
-Docker + Docker Compose
+## Docker + Docker Compose
 
 1. Clone the repository
 git clone https://github.com/your-username/SaveEarth.git
@@ -50,7 +50,7 @@ node src/server/download-model.mjs
 4. Run locally
 npm start
 
-🐳 Running with Docker
+## 🐳 Running with Docker
 
 Make sure the model is downloaded first:
 
@@ -59,7 +59,6 @@ docker-compose up -d
 
 
 App will be available at:
-
 http://localhost:3000
 ---
 
@@ -155,20 +154,3 @@ Figma UI:
 [https://www.figma.com/design/8LZeuVJY5Hvdr1lU6qBlnK/EcoPassport-Mobile-App-UI](https://www.figma.com/design/8LZeuVJY5Hvdr1lU6qBlnK/EcoPassport-Mobile-App-UI)
 
 ---
-
-## 📄 License
-
-MIT (or specify your own)
-
-```
-
----
-
-If you want:
-🔹 a **shorter / minimal version**  
-🔹 **badges** (build, license, contributors, etc.)  
-🔹 a **one-sentence tagline for GitHub**  
-🔹 a **demo GIF or screenshots section**
-
-just let me know and I’ll generate that too.
-```
